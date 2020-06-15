@@ -1,16 +1,30 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+      <!-- we want to allow user to filter our servers by say status
+      and we 2-way bind it to filteredStatus property.
+      Note how we then use pipe in ngFor to pass it required params
+      which is our filteredStatus and the server status field. -->
+      <input type="text" [(ngModel)]="filteredStatus">
+      <hr>
+        <button class="btn btn-primary"
+        (click)="onAddServer()">Add Server</button>
+      <hr>
+      <hr><hr>
+      <!-- async pipe line below recognizes that appStatus is of
+      type Observable or Promisse and it will observe it and 
+      update it when it changes in future. -->
+      <h2>App status: {{ appStatus | async }}</h2>
       <ul class="list-group">
         <li
           class="list-group-item"
-          *ngFor="let server of servers"
+          *ngFor="let server of servers | filter:filteredStatus:'status'"
           [ngClass]="getStatusClasses(server)">
           <span
             class="badge">
             {{ server.status }}
           </span>
-          <strong>{{ server.name }}</strong> | 
+          <strong>{{ server.name | shorten: 15 }}</strong> | 
             {{ server.instanceType | uppercase }} | 
             {{ server.started | date:'fullDate' | uppercase }}
         </li>
